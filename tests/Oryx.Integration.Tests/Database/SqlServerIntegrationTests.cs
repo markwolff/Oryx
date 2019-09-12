@@ -55,7 +55,7 @@ namespace Microsoft.Oryx.Integration.Tests
                 new List<DockerVolume> { volume },
                 Settings.BuildImageName,
                 "oryx",
-                new[] { "build", appDir, "-l", "nodejs", "--language-version", "10.14" },
+                new[] { "build", appDir, "-l", "node", "--language-version", "10.14" },
                 "oryxdevmcr.azurecr.io/public/oryx/node-10.14",
                 GetEnvironmentVariables(),
                 ContainerPort,

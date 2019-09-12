@@ -27,5 +27,5 @@ upgradeNpm() {
 upgradeNpm $version
 cd /usr/local/n/versions/node/$version
 mkdir -p /tmp/compressedSdk
-tar -zcf /tmp/compressedSdk/nodejs-$version.tar.gz .
+tar -zcf /tmp/compressedSdk/node-$version.tar.gz .
 rm -rf /usr/local/n ~/n

@@ -111,7 +111,7 @@ benv-getStringIndex() {
 # sdk versions can be picked up. Here we are trying to find the first occurrence of a path like '/opt/'
 # (as in /opt/dotnet) and inserting a more specific provided path before it.
 # Example: (note that all Oryx related patlform paths come in the end)
-# /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/nodejs/6/bin:/opt/dotnet/2.2.401:/opt/oryx/defaultversions
+# /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/node/6/bin:/opt/dotnet/2.2.401:/opt/oryx/defaultversions
 benv-benv-updatePath() {
   local pathToBeInserted="$1"
   local currentPath="$PATH"
@@ -182,12 +182,12 @@ benv-resolve() {
 
   # Resolve node versions
   if benv-matchesName "node" "$name" || benv-matchesName "node_version" "$name" && [ "${value::1}" != "/" ]; then
-    platformDir=$(benv-getPlatformDir "nodejs" "$value")
+    platformDir=$(benv-getPlatformDir "node" "$value")
     if [ "$platformDir" == "NotFound" ]; then
       if [ "$ORYX_ENABLE_DYNAMIC_TOOL_INSTALLATION" == "true" ]; then
-        benv-downloadSdkAndExtract "nodejs" "$value"
+        benv-downloadSdkAndExtract "node" "$value"
       else
-        benv-showSupportedVersionsErrorInfo "node" "nodejs" "$value"
+        benv-showSupportedVersionsErrorInfo "node" "node" "$value"
         return 1
       fi
     fi 

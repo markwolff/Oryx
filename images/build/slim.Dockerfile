@@ -110,8 +110,8 @@ COPY build/__nodeVersions.sh /tmp/scripts
 COPY images/build/createNpmLinks.sh /tmp/scripts
 RUN cd /tmp/scripts \
  && . ./__nodeVersions.sh \
- && ./installPlatform.sh nodejs $NODE8_VERSION \
- && ./installPlatform.sh nodejs $NODE10_VERSION \
+ && ./installPlatform.sh node $NODE8_VERSION \
+ && ./installPlatform.sh node $NODE10_VERSION \
  && chmod +x ./createNpmLinks.sh \
  && ./createNpmLinks.sh
 
@@ -130,7 +130,7 @@ RUN cd /tmp/scripts \
 
 RUN set -ex \
  && . /tmp/scripts/__nodeVersions.sh \
- && cd /opt/nodejs \
+ && cd /opt/node \
  && ln -s $NODE8_VERSION $NODE8_MAJOR_MINOR_VERSION \
  && ln -s $NODE8_MAJOR_MINOR_VERSION 8 \
  && ln -s $NODE10_VERSION $NODE10_MAJOR_MINOR_VERSION \
@@ -150,7 +150,7 @@ RUN set -ex \
  && ln -s $YARN_MINOR_VERSION $YARN_MAJOR_VERSION
 RUN set -ex \
  && mkdir -p /links \
- && cp -s /opt/nodejs/lts/bin/* /links \
+ && cp -s /opt/node/lts/bin/* /links \
  && cp -s /opt/yarn/stable/bin/yarn /opt/yarn/stable/bin/yarnpkg /links
 
 FROM main AS python
@@ -225,7 +225,7 @@ COPY --from=dotnet-install /usr/local/bin /opt/oryx/defaultversions
 # can write into it.
 RUN chmod a+rw /var/nuget
 
-# Copy NodeJs, NPM and Yarn related content
+# Copy Node, NPM and Yarn related content
 COPY --from=node-install /opt /opt
 COPY --from=node-install /links/ /opt/oryx/defaultversions
 

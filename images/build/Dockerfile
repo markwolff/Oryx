@@ -101,34 +101,34 @@ COPY images/build/installPlatform.sh /tmp/scripts
 RUN cd /tmp/scripts \
     && . ./__nodeVersions.sh \
     && chmod +x ./installPlatform.sh \
-    && ./installPlatform.sh nodejs 4.4.7 \
-    && ./installPlatform.sh nodejs 4.5.0 \
-    && ./installPlatform.sh nodejs 4.8.0 \
-    && ./installPlatform.sh nodejs 6.2.2 \
-    && ./installPlatform.sh nodejs 6.6.0 \
-    && ./installPlatform.sh nodejs 6.9.3 \
-    && ./installPlatform.sh nodejs 6.10.3 \
-    && ./installPlatform.sh nodejs 6.11.0 \
-    && ./installPlatform.sh nodejs 8.0.0 \
-    && ./installPlatform.sh nodejs 8.1.4 \
-    && ./installPlatform.sh nodejs 8.2.1 \
-    && ./installPlatform.sh nodejs 8.8.1 \
-    && ./installPlatform.sh nodejs 8.9.4 \
-    && ./installPlatform.sh nodejs 8.11.2 \
-    && ./installPlatform.sh nodejs 8.12.0 \
-    && ./installPlatform.sh nodejs 8.15.1 \
-    && ./installPlatform.sh nodejs 9.4.0 \
-    && ./installPlatform.sh nodejs 10.1.0 \
-    && ./installPlatform.sh nodejs 10.10.0 \
-    && ./installPlatform.sh nodejs 10.14.2 \
-    && ./installPlatform.sh nodejs $NODE6_VERSION \
-    && ./installPlatform.sh nodejs $NODE12_VERSION
+    && ./installPlatform.sh node 4.4.7 \
+    && ./installPlatform.sh node 4.5.0 \
+    && ./installPlatform.sh node 4.8.0 \
+    && ./installPlatform.sh node 6.2.2 \
+    && ./installPlatform.sh node 6.6.0 \
+    && ./installPlatform.sh node 6.9.3 \
+    && ./installPlatform.sh node 6.10.3 \
+    && ./installPlatform.sh node 6.11.0 \
+    && ./installPlatform.sh node 8.0.0 \
+    && ./installPlatform.sh node 8.1.4 \
+    && ./installPlatform.sh node 8.2.1 \
+    && ./installPlatform.sh node 8.8.1 \
+    && ./installPlatform.sh node 8.9.4 \
+    && ./installPlatform.sh node 8.11.2 \
+    && ./installPlatform.sh node 8.12.0 \
+    && ./installPlatform.sh node 8.15.1 \
+    && ./installPlatform.sh node 9.4.0 \
+    && ./installPlatform.sh node 10.1.0 \
+    && ./installPlatform.sh node 10.10.0 \
+    && ./installPlatform.sh node 10.14.2 \
+    && ./installPlatform.sh node $NODE6_VERSION \
+    && ./installPlatform.sh node $NODE12_VERSION
 COPY images/build/createNpmLinks.sh /tmp/scripts
 RUN chmod +x /tmp/scripts/createNpmLinks.sh
 RUN /tmp/scripts/createNpmLinks.sh
 
 RUN set -ex \
- && cd /opt/nodejs \
+ && cd /opt/node \
  && ln -s 4.4.7 4.4 \
  && ln -s 4.5.0 4.5 \
  && ln -s 4.8.0 4.8 \
@@ -218,7 +218,7 @@ ENV GIT_COMMIT=${GIT_COMMIT}
 ENV BUILD_NUMBER=${BUILD_NUMBER}
 
 RUN ./build.sh dotnetcore /opt/startupcmdgen/dotnet
-RUN ./build.sh node       /opt/startupcmdgen/nodejs
+RUN ./build.sh node       /opt/startupcmdgen/node
 RUN ./build.sh php        /opt/startupcmdgen/php
 RUN ./build.sh python     /opt/startupcmdgen/python
 ###

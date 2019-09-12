@@ -146,7 +146,7 @@ builtNodeImage=false
 getNode() {
 	local version="$1"
 	
-	if blobExists nodejs-$version.tar.gz; then
+	if blobExists node-$version.tar.gz; then
 		echo "Node version '$version' already present in blob storage. Skipping it..."
 		echo
 	else
