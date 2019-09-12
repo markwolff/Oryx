@@ -5,7 +5,7 @@
 # --------------------------------------------------------------------------------------------
 
 # Perform case-insensitive comparison
-matchesName() {
+benv-matchesName() {
   local expectedName="$1"
   local providedName="$2"
   local result=
@@ -112,7 +112,7 @@ benv-getStringIndex() {
 # (as in /opt/dotnet) and inserting a more specific provided path before it.
 # Example: (note that all Oryx related patlform paths come in the end)
 # /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/nodejs/6/bin:/opt/dotnet/sdks/2.2.401:/opt/oryx/defaultversions
-benv-updatePath() {
+benv-benv-updatePath() {
   local pathToBeInserted="$1"
   local currentPath="$PATH"
   local builtInInstallDirPrefix="/opt/"
@@ -181,7 +181,7 @@ benv-resolve() {
   local dynamicInstallRootDir="/tmp/oryx"
 
   # Resolve node versions
-  if matchesName "node" "$name" || matchesName "node_version" "$name" && [ "${value::1}" != "/" ]; then
+  if benv-matchesName "node" "$name" || benv-matchesName "node_version" "$name" && [ "${value::1}" != "/" ]; then
     platformDir=$(benv-getPlatformDir "nodejs" "$value")
     if [ "$platformDir" == "NotFound" ]; then
       if [ "$ORYX_ENABLE_DYNAMIC_TOOL_INSTALLATION" == "true" ]; then
@@ -193,7 +193,7 @@ benv-resolve() {
     fi 
 
     local DIR="$platformDir/$value/bin"
-    benv-updatePath "$DIR"
+    benv-benv-updatePath "$DIR"
     export node="$DIR/node"
     export npm="$DIR/npm"
     if [ -e "$DIR/npx" ]; then
@@ -204,7 +204,7 @@ benv-resolve() {
   fi
 
   # Resolve npm versions
-  if matchesName "npm" "$name" || matchesName "npm_version" "$name" && [ "${value::1}" != "/" ]; then
+  if benv-matchesName "npm" "$name" || benv-matchesName "npm_version" "$name" && [ "${value::1}" != "/" ]; then
     platformDir=$(benv-getPlatformDir "npm" "$value")
     if [ "$platformDir" == "NotFound" ]; then
       if [ "$ORYX_ENABLE_DYNAMIC_TOOL_INSTALLATION" == "true" ]; then
@@ -216,7 +216,7 @@ benv-resolve() {
     fi
 
     local DIR="$platformDir/$value"
-    benv-updatePath "$DIR"
+    benv-benv-updatePath "$DIR"
     export npm="$DIR/npm"
     if [ -e "$DIR/npx" ]; then
       export npx="$DIR/npx"
@@ -226,7 +226,7 @@ benv-resolve() {
   fi
 
   # Resolve python versions
-  if matchesName "python" "$name" || matchesName "python_version" "$name" && [ "${value::1}" != "/" ]; then
+  if benv-matchesName "python" "$name" || benv-matchesName "python_version" "$name" && [ "${value::1}" != "/" ]; then
     platformDir=$(benv-getPlatformDir "python" "$value")
     if [ "$platformDir" == "NotFound" ]; then
       if [ "$ORYX_ENABLE_DYNAMIC_TOOL_INSTALLATION" == "true" ]; then
@@ -239,7 +239,7 @@ benv-resolve() {
     fi 
 
     local DIR="$platformDir/$value/bin"
-    benv-updatePath "$DIR"
+    benv-benv-updatePath "$DIR"
     if [ -e "$DIR/python2" ]; then
       export python="$DIR/python2"
     elif [ -e "$DIR/python3" ]; then
@@ -254,7 +254,7 @@ benv-resolve() {
   fi
 
   # Resolve PHP versions
-  if matchesName "php" "$name" || matchesName "php_version" "$name" && [ "${value::1}" != "/" ]; then
+  if benv-matchesName "php" "$name" || benv-matchesName "php_version" "$name" && [ "${value::1}" != "/" ]; then
     platformDir=$(benv-getPlatformDir "php" "$value")
     if [ "$platformDir" == "NotFound" ];then
       if [ "$ORYX_ENABLE_DYNAMIC_TOOL_INSTALLATION" == "true" ]; then
@@ -267,13 +267,13 @@ benv-resolve() {
     fi
 
     local DIR="$platformDir/$value/bin"
-    benv-updatePath "$DIR"
+    benv-benv-updatePath "$DIR"
     export php="$DIR/php"
 
     return 0
   fi
 
-  if matchesName "composer" "$name" || matchesName "composer_version" "$name" && [ "${value::1}" != "/" ]; then
+  if benv-matchesName "composer" "$name" || benv-matchesName "composer_version" "$name" && [ "${value::1}" != "/" ]; then
     platformDir=$(benv-getPlatformDir "php-composer" "$value")
     if [ "$platformDir" == "NotFound" ]; then
       if [ "$ORYX_ENABLE_DYNAMIC_TOOL_INSTALLATION" == "true" ]; then
@@ -285,14 +285,14 @@ benv-resolve() {
     fi
 
     local DIR="$platformDir/$value"
-    benv-updatePath "$DIR"
+    benv-benv-updatePath "$DIR"
     export composer="$DIR/composer.phar"
 
     return 0
   fi
 
   # Resolve dotnet versions
-  if matchesName "dotnet" "$name" || matchesName "dotnet_version" "$name" && [ "${value::1}" != "/" ]; then
+  if benv-matchesName "dotnet" "$name" || benv-matchesName "dotnet_version" "$name" && [ "${value::1}" != "/" ]; then
     local runtimesDir="/opt/dotnet/runtimes"
     if [ ! -d "$runtimesDir/$value" ]; then
       echo >&2 benv: dotnet version \'$value\' not found\; choose one of:
@@ -301,7 +301,7 @@ benv-resolve() {
     fi
 
     local DIR=$(readlink $"$runtimesDir/$value/sdk")
-    benv-updatePath "$DIR"
+    benv-benv-updatePath "$DIR"
     export dotnet="$DIR/dotnet"
     
     return 0
