@@ -54,14 +54,14 @@ RUN set -ex \
     && find /var/nuget -type d -exec chmod 777 {} \;
 
 RUN set -ex \
- && sdksDir=/opt/dotnet/sdks \
+ && sdksDir=/opt/dotnet \
  && cd $sdksDir \
  && ln -s 1.1 1 \
  && ln -s 3.0 3
 
 RUN set -ex \
  && dotnetDir=/opt/dotnet \
- && sdksDir=$dotnetDir/sdks \
+ && sdksDir=$dotnetDir \
  && runtimesDir=$dotnetDir/runtimes \
  && cd $runtimesDir \
  && . /tmp/scripts/__dotNetCoreSdkVersions.sh \

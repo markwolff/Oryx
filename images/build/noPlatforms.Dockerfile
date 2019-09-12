@@ -73,13 +73,13 @@ RUN . /tmp/scripts/__dotNetCoreSdkVersions.sh && \
     /tmp/scripts/installDotNetCore.sh
 
 RUN set -ex \
- && sdksDir=/opt/dotnet/sdks \
+ && sdksDir=/opt/dotnet \
  && cd $sdksDir \
  && ln -s 2.1 2
 
 RUN set -ex \
  && dotnetDir=/opt/dotnet \
- && sdksDir=$dotnetDir/sdks \
+ && sdksDir=$dotnetDir \
  && runtimesDir=$dotnetDir/runtimes \
  && mkdir -p $runtimesDir \
  && cd $runtimesDir \
