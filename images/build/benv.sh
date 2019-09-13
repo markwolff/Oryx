@@ -53,9 +53,36 @@ while read benvvar; do
 done < <(set | grep -i '^dotnet_version=')
 unset benvvar # Remove all traces of this part of the script
 
+ORYX_BLOB_URL_BASE="https://oryxsdks.blob.core.windows.net/sdks"
+
+benv-getFullVersion() {
+  local version="$1"
+  IFS='.' read -ra VERSION_PARTS <<< "$version"
+  local partsLength="${#VERSION_PARTS[@]}"
+  if [ $partsLength -eq 1 ]; then
+    local lookupVersion="${VERSION_PARTS[0]}"
+  elif [ $partsLength -eq 2 ]; then
+    local lookupVersion="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}"
+  else [ $partsLength -eq 3 ]; then
+    echo "$version"
+    return 0
+  fi
+  
+  local blobName="$platformName-$lookupVersion.tar.gz"
+  curl -I $ORYX_BLOB_URL_BASE/$blobName 1> /tmp/curlOut.txt
+  if [ ! $? -eq 0 ]; then
+    return 0
+  fi
+
+  local lookupText="x-ms-meta-fullVersion: "
+  version=$(grep "$lookupText" /tmp/curlOut.txt | sed -e 's/$lookupText//g')
+  rm -f /tmp/curlOut.txt
+  echo "$version"
+}
+
 benv-downloadSdkAndExtract() {
     local platformName="$1"
-    local version="$2"
+    local version=$(benv-getFullVersion "$2")
     local blobName="$platformName-$version.tar.gz"
     
     currentDir=`pwd`
@@ -64,7 +91,6 @@ benv-downloadSdkAndExtract() {
     if [ -d "$targetDir" ]; then
       echo "$platformName version '$version' already exists. Skipping installing it..."
     else
-      local ORYX_BLOB_URL_BASE="https://oryxsdks.blob.core.windows.net/sdks"
       curl -I $ORYX_BLOB_URL_BASE/$blobName 2> /tmp/curlError.txt 1> /tmp/curlOut.txt
       grep "HTTP/1.1 200 OK" /tmp/curlOut.txt &> /dev/null
       exitCode=$?
@@ -83,7 +109,6 @@ benv-downloadSdkAndExtract() {
 
       # Create a link : major.minor => major.minor.patch
       cd "$platformDir"
-      IFS='.' read -ra SDK_VERSION_PARTS <<< "$version"
       MAJOR_MINOR="${SDK_VERSION_PARTS[0]}.${SDK_VERSION_PARTS[1]}"
       echo "Creating link from $MAJOR_MINOR to $version..."
       ln -s $version $MAJOR_MINOR
