@@ -56,33 +56,28 @@ unset benvvar # Remove all traces of this part of the script
 ORYX_BLOB_URL_BASE="https://oryxsdks.blob.core.windows.net/sdks"
 
 benv-getFullVersion() {
-  local version="$1"
+  local platformName="$1"
+  local version="$2"
   IFS='.' read -ra VERSION_PARTS <<< "$version"
   local partsLength="${#VERSION_PARTS[@]}"
   if [ $partsLength -eq 1 ]; then
     local lookupVersion="${VERSION_PARTS[0]}"
   elif [ $partsLength -eq 2 ]; then
     local lookupVersion="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}"
-  else [ $partsLength -eq 3 ]; then
+  else [ $partsLength -eq 3 ]
     echo "$version"
     return 0
   fi
   
   local blobName="$platformName-$lookupVersion.tar.gz"
-  curl -I $ORYX_BLOB_URL_BASE/$blobName 1> /tmp/curlOut.txt
-  if [ ! $? -eq 0 ]; then
-    return 0
-  fi
-
   local lookupText="x-ms-meta-fullVersion: "
-  version=$(grep "$lookupText" /tmp/curlOut.txt | sed -e 's/$lookupText//g')
-  rm -f /tmp/curlOut.txt
+  version=$(curl -I $ORYX_BLOB_URL_BASE/$blobName 2> /dev/null | grep -Fi $lookupText | sed -e "s/$lookupText//g" | tr -d '\r')
   echo "$version"
 }
 
 benv-downloadSdkAndExtract() {
     local platformName="$1"
-    local version=$(benv-getFullVersion "$2")
+    local version="$2"
     local blobName="$platformName-$version.tar.gz"
     
     currentDir=`pwd`
@@ -109,6 +104,7 @@ benv-downloadSdkAndExtract() {
 
       # Create a link : major.minor => major.minor.patch
       cd "$platformDir"
+      IFS='.' read -ra VERSION_PARTS <<< "$version"
       MAJOR_MINOR="${SDK_VERSION_PARTS[0]}.${SDK_VERSION_PARTS[1]}"
       echo "Creating link from $MAJOR_MINOR to $version..."
       ln -s $version $MAJOR_MINOR
@@ -255,6 +251,7 @@ benv-resolve() {
     platformDir=$(benv-getPlatformDir "python" "$value")
     if [ "$platformDir" == "NotFound" ]; then
       if [ "$ORYX_ENABLE_DYNAMIC_TOOL_INSTALLATION" == "true" ]; then
+        value=$(benv-getFullVersion "python" "$value")
         benv-downloadSdkAndExtract "python" "$value"
         export LD_LIBRARY_PATH="$dynamicInstallRootDir/python/$value/lib:$LD_LIBRARY_PATH"
       else
