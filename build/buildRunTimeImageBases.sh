@@ -12,6 +12,7 @@ declare -r REPO_DIR=$( cd $( dirname "$0" ) && cd .. && pwd )
 source $REPO_DIR/build/__variables.sh
 source $REPO_DIR/build/__functions.sh
 source $REPO_DIR/build/__nodeVersions.sh
+source $REPO_DIR/build/__baseImageTags.sh
 
 runtimeImagesSourceDir="$RUNTIME_IMAGES_SRC_DIR"
 runtimeSubDir="$1"
@@ -23,18 +24,6 @@ then
         exit 1
     fi
 fi
-
-echo
-echo "Building the common base image '$RUNTIME_BASE_IMAGE_NAME'..."
-echo
-# Build the common base image first, so other images that depend on it get the latest version.
-# We don't retrieve this image from a repository but rather build locally to make sure we get
-# the latest version of its own base image.
-docker build \
-    --pull \
-    -f "$RUNTIME_BASE_IMAGE_DOCKERFILE_PATH" \
-    -t "$RUNTIME_BASE_IMAGE_NAME" \
-    $REPO_DIR
 
 labels="--label com.microsoft.oryx.git-commit=$GIT_COMMIT"
 labels="$labels --label com.microsoft.oryx.build-number=$BUILD_NUMBER"
@@ -87,6 +76,10 @@ for dockerFile in $dockerFiles; do
         --build-arg NODE8_VERSION=$NODE8_VERSION \
         --build-arg NODE10_VERSION=$NODE10_VERSION \
         --build-arg NODE12_VERSION=$NODE12_VERSION \
+        --build-arg ORYX_RUNTIME_BASE="-$ORYX_RUNTIME_BASE" \
+        --build-arg DOT_NET_CORE_RUNTIME_BASE_TAG="-$DOT_NET_CORE_RUNTIME_BASE_TAG" \
+        --build-arg PHP_RUNTIME_BASE_TAG="-$PHP_RUNTIME_BASE_TAG" \
+        --build-arg NODE_RUNTIME_BASE_TAG="-$NODE_RUNTIME_BASE_TAG" \
         $labels \
         .
 

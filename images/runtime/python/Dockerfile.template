@@ -1,3 +1,5 @@
+ARG ORYX_RUNTIME_BASE=""
+
 # Startup script generator
 FROM golang:1.11-stretch as startupCmdGen
 # GOPATH is set to "/go" in the base image
@@ -11,7 +13,7 @@ ENV GIT_COMMIT=${GIT_COMMIT}
 ENV BUILD_NUMBER=${BUILD_NUMBER}
 RUN ./build.sh python /opt/startupcmdgen/startupcmdgen
 
-FROM oryx-run-base AS main
+FROM mcr.microsoft.com/oryx/base:runtime-base-stretch${ORYX_RUNTIME_BASE} AS main
 
 ENV PYTHON_VERSION %PYTHON_FULL_VERSION%
 

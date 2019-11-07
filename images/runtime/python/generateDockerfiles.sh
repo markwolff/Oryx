@@ -7,7 +7,7 @@
 set -e
 
 declare -r DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-declare -r PYTHON_VERSIONS_PATH=$DIR/../../../build/__pythonVersions.sh
+declare -r PYTHON_VERSIONS_PATH=$DIR/../../../build/__baseImageTags.sh
 declare -r DOCKERFILE_TEMPLATE="$DIR/Dockerfile.template"
 # Python major version, e.g. '2', '3'
 declare -r PYTHON_MAJOR_VERSION_PLACEHOLDER="%PYTHON_MAJOR_VERSION%"
@@ -29,6 +29,7 @@ do
 	cp "$DOCKERFILE_TEMPLATE" "$TARGET_DOCKERFILE"
 
 	# Replace placeholders
+	sed -i "s|%BASE_TAG%|$ORYX_RUNTIME_BASE|g" "$TARGET_DOCKERFILE"
 	sed -i "s|$PYTHON_VERSION_PLACEHOLDER|$MAJOR_MINOR_VERSION|g" "$TARGET_DOCKERFILE"
 	sed -i "s|$PYTHON_FULL_VERSION_PLACEHOLDER|$PYTHON_VERSION|g" "$TARGET_DOCKERFILE"
 	sed -i "s|$PYTHON_MAJOR_VERSION_PLACEHOLDER|${SPLIT_VERSION[0]}|g" "$TARGET_DOCKERFILE"

@@ -1,5 +1,6 @@
 # From https://github.com/docker-library/php.git
-FROM php-run-base
+ARG PHP_RUNTIME_BASE_TAG=""
+FROM mcr.microsoft.com/oryx/base:php-runtime-stretch${PHP_RUNTIME_BASE_TAG}
 
 # do NOT merge this content with above line because the 
 # above line is shared across all php images

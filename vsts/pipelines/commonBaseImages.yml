@@ -1,0 +1,26 @@
+steps:
+- checkout: self
+  clean: true
+     
+- task: Docker@1
+  displayName: Container registry login
+  inputs:
+    command: login
+    azureSubscriptionEndpoint: OryxMCR
+    azureContainerRegistry: oryxmcr.azurecr.io
+
+- task: ShellScript@2
+  displayName: 'Build common base images and push them to staging repository'
+  inputs:
+    scriptPath: ./images/common/buildAndPushImages.sh
+
+- task: Docker@1
+  displayName: 'Push base images to staging registry'
+  inputs:
+    azureSubscriptionEndpoint: OryxMCR
+    azureContainerRegistry: oryxmcr.azurecr.io
+    command: 'Push an image'
+    pushMultipleImages: true
+    imageNamesPath: '$(Build.SourcesDirectory)/artifacts/baseImages.txt'
+    includeLatestTag: false
+    enforceDockerNamingConvention: true

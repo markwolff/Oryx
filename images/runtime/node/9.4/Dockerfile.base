@@ -1,4 +1,5 @@
-FROM oryx-run-base AS node-original
+ARG NODE_RUNTIME_BASE_TAG=""
+FROM mcr.microsoft.com/oryx/base:runtime-stretch${NODE_RUNTIME_BASE_TAG}
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node

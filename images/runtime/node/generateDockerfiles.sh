@@ -9,6 +9,7 @@ set -e
 declare -r REPO_DIR=$( cd $( dirname "$0" ) && cd .. && cd .. && cd .. && pwd )
 
 source $REPO_DIR/build/__nodeVersions.sh
+source $REPO_DIR/build/__baseImageTags.sh
 
 declare -r DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 declare -r DOCKERFILE_TEMPLATE="$DIR/Dockerfile.template"
@@ -24,5 +25,5 @@ do
 
 	# Replace placeholders
 	RUNTIME_BASE_IMAGE_NAME="mcr.microsoft.com/oryx/base:node-$VERSION_DIRECTORY-$NODE_RUNTIME_BASE_TAG"
-	sed -i "s|$RUNTIME_BASE_IMAGE_NAME_PLACEHOLDER|$RUNTIME_BASE_IMAGE_NAME|g" "$TARGET_DOCKERFILE"
+	sed -i "s|%RUNTIME_BASE_IMAGE_NAME%|$RUNTIME_BASE_IMAGE_NAME|g" "$TARGET_DOCKERFILE"
 done

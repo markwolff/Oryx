@@ -1,13 +1,11 @@
 #!/bin/bash
 set -ex
 
+declare -r REPO_DIR=$( cd $( dirname "$0" ) && cd ../../.. && pwd )
 declare -r CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-source "$CURRENT_DIR/__versions.sh"
 
-baseImage="php-run-base"
-echo
-echo "Buildig image '$baseImage'..."
-docker build -t $baseImage -f "$CURRENT_DIR/runbase.Dockerfile" .
+source "$CURRENT_DIR/__versions.sh"
+source "$REPO_DIR/build/__baseImageTags.sh"
 
 for PHP_VERSION in "${VERSION_ARRAY[@]}"
 do
@@ -17,8 +15,15 @@ do
 	PHP_IMAGE_NAME="php-$VERSION_DIRECTORY"
     cd "$CURRENT_DIR/$VERSION_DIRECTORY/"
 
+    dockerFile="Dockerfile.$VERSION_DIRECTORY"
+	sed -i "s|%BASE_TAG%|$PHP_RUNTIME_BASE_TAG|g" "$dockerFile"
+
     echo
     echo "Building php image '$PHP_IMAGE_NAME'..."
     echo
-	docker build -t $PHP_IMAGE_NAME -f "Dockerfile.$VERSION_DIRECTORY" .
+	docker build \
+        -t $PHP_IMAGE_NAME \
+        -f "$dockerFile" \
+        --build-arg PHP_RUNTIME_BASE_TAG="-$PHP_RUNTIME_BASE_TAG" \
+        .
 done

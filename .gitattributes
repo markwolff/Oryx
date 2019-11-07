@@ -17,3 +17,5 @@
 
 # Make sure bash scripts have lf
 *.sh text eol=lf
+docker-php-* eol=lf
+apache2-foreground eol=lf

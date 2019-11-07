@@ -1,4 +1,4 @@
-FROM oryx-run-base
+FROM oryxmcr.azurecr.io/public/oryx/base:runtime-stretch
 
 # prevent Debian's PHP packages from being installed
 # https://github.com/docker-library/php/pull/542
