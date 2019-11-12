@@ -66,6 +66,8 @@ then
 fi
 
 echo
+echo "Ensuring 'build images' for tests..."
+$REPO_DIR/build/buildTestBuildImages.sh $ORYX_TEST_IMAGE_BASE $ORYX_TEST_TAG_SUFFIX
 
 testProjectName="Oryx.Integration"
 cd "$TESTS_SRC_DIR/$testProjectName.Tests"

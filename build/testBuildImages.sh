@@ -23,6 +23,24 @@ else
     $buildBuildImagesScript "$@"
 fi
 
+if [ -n "$2" ]
+then
+    echo
+    echo "Setting environment variable 'ORYX_TEST_IMAGE_BASE' to provided value '$2'."
+    export ORYX_TEST_IMAGE_BASE="$2"
+fi
+
+if [ -n "$3" ]
+then
+    echo
+    echo "Setting environment variable 'ORYX_TEST_TAG_SUFFIX' to provided value '$3'."
+    export ORYX_TEST_TAG_SUFFIX="-$3"
+fi
+
+echo
+echo "Ensuring 'build images' for tests..."
+$REPO_DIR/build/buildTestBuildImages.sh $ORYX_TEST_IMAGE_BASE $ORYX_TEST_TAG_SUFFIX
+
 echo
 echo "Building and running tests..."
 cd "$TESTS_SRC_DIR/$testProjectName"
