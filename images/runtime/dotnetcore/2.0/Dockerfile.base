@@ -1,4 +1,5 @@
-FROM microsoft/aspnetcore:2.0.9
+ARG NET_CORE_APP_20
+FROM microsoft/aspnetcore:${NET_CORE_APP_20}
 
 # Older .NET core versions, which have reached end of life and therefore are no longer updated, use
 # a version of `curl` that has known issues.

@@ -1,4 +1,5 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:1.0.16
+ARG NET_CORE_APP_10
+FROM mcr.microsoft.com/dotnet/core/runtime:${NET_CORE_APP_10}
 
 # Older .NET core versions, which have reached end of life and therefore are no longer updated, use
 # a version of `curl` that has known issues.
