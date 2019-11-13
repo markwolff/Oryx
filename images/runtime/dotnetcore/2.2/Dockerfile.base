@@ -1,10 +1,11 @@
 ARG DOT_NET_CORE_RUNTIME_BASE_TAG
 ARG NET_CORE_APP_22
 ARG NET_CORE_APP_22_SHA
+ARG DOT_NET_CORE_22_SDK_VERSION
 
 # dotnet tools are currently available as part of SDK so we need to create them in an sdk image
 # and copy them to our final runtime image
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2.402 AS tools-install
+FROM mcr.microsoft.com/dotnet/core/sdk:${DOT_NET_CORE_22_SDK_VERSION} AS tools-install
 RUN dotnet tool install --tool-path /dotnetcore-tools dotnet-sos
 
 FROM mcr.microsoft.com/oryx/base:dotnetcore-runtime-stretch${DOT_NET_CORE_RUNTIME_BASE_TAG}
