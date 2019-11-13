@@ -72,3 +72,9 @@ buildImage \
 buildImage \
     "$REPO_DIR/images/common/phpRuntimeBase-stretch.Dockerfile" \
     "$repoName:php-runtime-stretch"
+
+
+#-------------------- Node ---------------------------
+buildImage \
+    "$REPO_DIR/images/common/nodeRuntimeBase-stretch.Dockerfile" \
+    "$repoName:node-runtime-stretch"
