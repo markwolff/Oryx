@@ -1,4 +1,4 @@
-ARG NODE_RUNTIME_BASE_TAG=""
+ARG NODE_RUNTIME_BASE_TAG
 FROM mcr.microsoft.com/oryx/base:runtime-stretch${NODE_RUNTIME_BASE_TAG}
 
 RUN groupadd --gid 1000 node \

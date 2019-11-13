@@ -1,7 +1,7 @@
 # The official Node 4.4 image has vulnerabilities, so we build our own version
 # to fetch the latest stretch release with the required fixes.
 # https://github.com/nodejs/docker-node.git, commit ID 22668206915e4d39c4c35608848be835dd5526a3
-ARG NODE_RUNTIME_BASE_TAG=""
+ARG NODE_RUNTIME_BASE_TAG
 FROM mcr.microsoft.com/oryx/base:runtime-stretch${NODE_RUNTIME_BASE_TAG}
 
 # gpg keys listed at https://github.com/nodejs/node
