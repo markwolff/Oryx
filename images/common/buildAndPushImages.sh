@@ -12,6 +12,7 @@ labels="$labels --label com.microsoft.oryx.build-number=$BUILD_NUMBER"
 labels="$labels --label com.microsoft.oryx.release-tag-name=$RELEASE_TAG_NAME"
 
 repoName="oryxmcr.azurecr.io/public/oryx/base"
+artifactsFile="$REPO_DIR/artifacts/baseImages.txt"
 
 cd "$REPO_DIR"
 
@@ -29,7 +30,7 @@ function buildImage() {
 
     withSpecificTag="$imageName-$RELEASE_TAG_NAME"
     docker tag "$imageName" "$withSpecificTag"
-    echo "$withSpecificTag" >> "$REPO_DIR/artifacts/baseImages.txt" 
+    echo "$withSpecificTag" >> "$artifactsFile" 
 }
 
 mkdir -p "$REPO_DIR/artifacts"
@@ -59,6 +60,11 @@ buildImage \
     "$REPO_DIR/images/common/runtimeBase-buster.Dockerfile" \
     "$repoName:runtime-buster"
 
+#-------------------- Node ---------------------------
+buildImage \
+    "$REPO_DIR/images/common/nodeRuntimeBase-stretch.Dockerfile" \
+    "$repoName:node-runtime-stretch"
+
 #-------------------- .NET Core ---------------------------
 buildImage \
     "$REPO_DIR/images/common/dotNetCoreRuntimeBase-stretch.Dockerfile" \
@@ -73,8 +79,5 @@ buildImage \
     "$REPO_DIR/images/common/phpRuntimeBase-stretch.Dockerfile" \
     "$repoName:php-runtime-stretch"
 
-
-#-------------------- Node ---------------------------
-buildImage \
-    "$REPO_DIR/images/common/nodeRuntimeBase-stretch.Dockerfile" \
-    "$repoName:node-runtime-stretch"
+echo
+cat "$artifactsFile"
