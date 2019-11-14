@@ -1,5 +1,5 @@
 ARG NODE_RUNTIME_BASE_TAG
-FROM mcr.microsoft.com/oryx/base:node-runtime-stretch${NODE_RUNTIME_BASE_TAG}
+FROM oryxmcr.azurecr.io/public/oryx/base:node-runtime-stretch as node-original
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
@@ -24,25 +24,9 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-ENV YARN_VERSION 1.17.3
-
-RUN curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
-  && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
-  && mkdir -p /opt \
-  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
-  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
-  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
-  && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
-
 CMD [ "node" ]
 
 FROM node-original AS main
-
-RUN apt-get update \
-  && apt-get install -y \
-    unzip \
-  && rm -rf /var/lib/apt/lists/*
 
 COPY images/runtime/node/installDependencies.sh /tmp/scripts/installDependencies.sh
 RUN /tmp/scripts/installDependencies.sh
