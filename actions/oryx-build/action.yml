@@ -1,0 +1,26 @@
+name: 'Oryx Build Action'
+description: 'Build an Azure web app using Oryx.'
+branding:
+  icon: cloud
+  color: white
+inputs:
+  source-directory:
+    description: 'Relative path (within the repository) to the source directory of the project you want to build; if no value is provided for this, the root of the repository ("GITHUB_WORKSPACE" environment variable) will be built.'
+    required: false
+  output-directory:
+    description: 'Path to the directory on the container that the build artifacts will be placed; if no value is provided, the given platform will determine where the build artifacts are placed within the repository.'
+    required: false
+  platform:
+    description: 'Programming platform used to build the web app; if no value is provided, Oryx will determine the platform to build with. The supported values are "dotnet", "nodejs", "php" and "python".'
+    required: false
+  platform-version:
+    description: 'Version of the programming platform used to build the web app; if no value is provided, Oryx will determine the version needed to build the repository.'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.source-directory }}
+    - ${{ inputs.output-directory }}
+    - ${{ inputs.platform }}
+    - ${{ inputs.platform-version }}
